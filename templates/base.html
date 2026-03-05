@@ -7,13 +7,39 @@
     <title>{% block titulo %}Sistema de Gestión Escolar (SGE){% endblock %}</title>
 
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary":           "#197fe6",
+                        "navy-deep":         "#0f172a",
+                        "muted-blue":        "#64748b",
+                        "soft-grey":         "#e2e8f0",
+                        "background-light":  "#f6f7f8",
+                        "background-dark":   "#111921",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg":      "0.5rem",
+                        "xl":      "0.75rem",
+                        "full":    "9999px"
+                    },
+                },
+            },
+        }
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 
-    <link rel="stylesheet" href="{% static 'css/estilos.css' %}}">
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
     <script src="{% static 'js/config.js' %}" defer></script>
 </head>
-<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased">
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased">
     <div class="relative flex min-h-screen flex-col">
         <header class="sticky top-0 z-50 w-full bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-soft-grey dark:border-slate-800 px-4 md:px-10 lg:px-20 py-3">
             <div class="max-w-7xl mx-auto flex items-center justify-between">
@@ -24,7 +50,7 @@
                         </div>
                             <h1 class="text-navy-deep dark:text-white text-xl font-bold tracking-tight">Sistema de Gestión Escolar (SGE)</h1>
                     </div>
-                    <nav class=" md:flex items-center gap-8">
+                    <nav class="md:flex items-center gap-8">
                         <a class="text-navy-deep dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors" href="{% url 'base' %}">Inicio</a>
                         <a class="text-muted-blue dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="{% url 'portal_alumnos' %}">Alumnos</a>
                         <a class="text-muted-blue dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="{% url 'portal_cursos' %}">Cursos</a>
@@ -32,22 +58,20 @@
                     </nav>
                 </div>
                 <div class="flex items-center gap-4">
-
                     <div class="text-navy-deep dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors">
                         <form method="post" action="{% url 'logout' %}">
-                                {% csrf_token %}
-                                <button type="submit">Cerrar Sesión</button>
+                            {% csrf_token %}
+                            <button type="submit">Cerrar Sesión</button>
                         </form>
                     </div>
-
-
                 </div>
             </div>
         </header>
+
         <main class="flex-1 max-w-7xl mx-auto w-full px-4 md:px-10 lg:px-20 py-8">
             {% block main %}
             <div class="mb-10">
-                <h2 class="text- navy-deep dark:text-white text-3xl font-extrabold tracking-tight">Panel de Control</h2>
+                <h2 class="text-navy-deep dark:text-white text-3xl font-extrabold tracking-tight">Panel de Control</h2>
                 <p class="text-muted-blue dark:text-slate-400 mt-2 text-lg">Bienvenido de nuevo, Admin. Aquí tienes el estado actual de la institución.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
@@ -190,14 +214,14 @@
                                 Contactar Soporte
                             </a>
                         </div>
-                             <span class="material-symbols-outlined absolute -bottom-4 -right-4 text-white/10 text-[120px] select-none group-hover:rotate-12 transition-transform duration-500">support_agent</span>
+                        <span class="material-symbols-outlined absolute -bottom-4 -right-4 text-white/10 text-[120px] select-none group-hover:rotate-12 transition-transform duration-500">support_agent</span>
                     </div>
                 </div>
             </div>
             {% endblock %}
         </main>
 
-       <footer class="bg-navy-deep text-slate-400 py-12 px-4 md:px-10 lg:px-20 mt-12 border-t border-slate-800">
+        <footer class="bg-navy-deep text-slate-400 py-12 px-4 md:px-10 lg:px-20 mt-12 border-t border-slate-800">
             <div class="max-w-7xl mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-8">
                     <div>
@@ -206,42 +230,24 @@
                             <span class="text-xl font-bold">Sistema de Gestión Escolar (SGE)</span>
                         </div>
                         <p class="text-sm leading-relaxed max-w-xs">
-                                                    Comprometidos con la excelencia académica y la innovación digital en la gestión educativa institucional.
-                                                </p>
+                            Comprometidos con la excelencia académica y la innovación digital en la gestión educativa institucional.
+                        </p>
                     </div>
                     <div>
                         <h4 class="text-white font-bold mb-6">Enlaces Rápidos</h4>
                         <ul class="space-y-4 text-sm">
-                        <li><a class="hover:text-primary transition-colors" href="{% url 'reglamento' %}">Reglamento Escolar</a></li>
-                        <li><a class="hover:text-primary transition-colors" href="{% url 'directorio_docente' %}">Directorio Docente</a></li>
-                       <!-- <li><a class="hover:text-primary transition-colors" href="#">Portal de Alumnos</a></li> -->
-                        <li><a class="hover:text-primary transition-colors" href="{% url 'Term_acc_priva' %}">Privacidad</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="text-white font-bold mb-6">Contacto</h4>
-                        <ul class="space-y-4 text-sm">
-                        <li class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-primary text-lg">location_on</span>
-                        <span>Rancagua , Chile</span>
-                        </li>
-                        <li class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-primary text-lg">call</span>
-                        <span>+56 9 9999999</span>
-                        </li>
-                        <li class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-primary text-lg">mail</span>
-                        <span>Rodrigoarevaloabarca@gmail.com</span>
-                        </li>
+                            <li><a class="hover:text-primary transition-colors" href="{% url 'reglamento' %}">Reglamento Escolar</a></li>
+                            <li><a class="hover:text-primary transition-colors" href="{% url 'directorio_docente' %}">Directorio Docente</a></li>
+                            <li><a class="hover:text-primary transition-colors" href="{% url 'terminos' %}">Privacidad</a></li>
                         </ul>
                     </div>
                 </div>
                 <div class="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
                     <p>© 2026 Portal Sistema de Gestión Escolar (SGE). Todos los derechos reservados.</p>
                     <div class="flex items-center gap-6">
-                    <a class="hover:text-white transition-colors" href="#">Facebook</a>
-                    <a class="hover:text-white transition-colors" href="#">Twitter</a>
-                    <a class="hover:text-white transition-colors" href="#">LinkedIn</a>
+                        <a class="hover:text-white transition-colors" href="#">Facebook</a>
+                        <a class="hover:text-white transition-colors" href="#">Twitter</a>
+                        <a class="hover:text-white transition-colors" href="#">LinkedIn</a>
                     </div>
                 </div>
             </div>
