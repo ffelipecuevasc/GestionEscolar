@@ -3,7 +3,6 @@ from django.contrib.auth.decorators import login_required
 from alumnos.models import Alumno
 from alumnos.forms import AlumnoForm
 
-
 @login_required
 def inicio(request):
     return render(request, 'alumnos/inicio.html')
