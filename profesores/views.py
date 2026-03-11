@@ -8,13 +8,13 @@ def inicio(request):
     return render(request, 'profesores/inicio.html')
 
 @login_required
-def lista_alumnos(request):
+def lista_profesores(request):
     profesores = Profesor.objects.all()
     contexto = {'lista_profesores': profesores}
     return render(request, 'profesores/lista_profesores.html', contexto)
 
 @login_required
-def agregar_alumno(request):
+def agregar_profesor(request):
     if request.method == 'POST':
         form = ProfesorForm(request.POST)
         if form.is_valid():

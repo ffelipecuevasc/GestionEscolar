@@ -1,9 +1,20 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-
+from alumnos.models import Alumno
+from profesores.models import Profesor
+from cursos.models import Curso
 @login_required
 def base(request):
-    return render(request, 'base.html')
+    total_alumnos = Alumno.objects.count()
+    total_profesores = Profesor.objects.count()
+    total_cursos = Curso.objects.count()
+
+    contexto = {
+        'total_alumnos' : total_alumnos,
+        'total_profesores' : total_profesores,
+        'total_cursos' : total_cursos
+    }
+    return render(request, 'base.html', contexto)
 
 def sobre_nosotros(request):
     return render(request, 'complementos_login/sobre_nosotros.html')
