@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404 # Función para ocupar el template 404 personalizado
 from django.contrib.auth.decorators import login_required
 from alumnos.models import Alumno
 from alumnos.forms import AlumnoForm
@@ -23,5 +23,5 @@ def agregar_alumno(request):
             return redirect('lista_alumnos')
     else:
         form = AlumnoForm()
-        contexto = {'form': form}
+    contexto = {'form': form}
     return render(request, 'alumnos/agregar_alumno.html', contexto)
