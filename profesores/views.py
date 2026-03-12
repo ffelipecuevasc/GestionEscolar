@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+# profesores/views.py
+from django.shortcuts import render, redirect, get_object_or_404  # ← se agrega get_object_or_404
 from django.contrib.auth.decorators import login_required
 from profesores.models import Profesor
 from profesores.forms import ProfesorForm
@@ -24,3 +25,35 @@ def agregar_profesor(request):
         form = ProfesorForm()
     contexto = {'form': form}
     return render(request, 'profesores/agregar_profesor.html', contexto)
+
+# ── CRUD faltante ───────────────────────────────────────────────
+
+@login_required
+def detalle_profesor(request, rut):
+    profesor = get_object_or_404(Profesor, rut=rut)
+    contexto = {'profesor': profesor}
+    return render(request, 'profesores/detalle_profesor.html', contexto)
+
+@login_required
+def editar_profesor(request, rut):
+    profesor = get_object_or_404(Profesor, rut=rut)
+    if request.method == 'POST':
+        form = ProfesorForm(request.POST, instance=profesor)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_profesores')
+    else:
+        form = ProfesorForm(instance=profesor)
+
+    contexto = {'form': form, 'profesor': profesor}
+    return render(request, 'profesores/editar_profesor.html', contexto)
+
+@login_required
+def eliminar_profesor(request, rut):
+    profesor = get_object_or_404(Profesor, rut=rut)
+    if request.method == 'POST':
+        profesor.delete()
+        return redirect('lista_profesores')
+
+    contexto = {'profesor': profesor}
+    return render(request, 'profesores/eliminar_profesor.html', contexto)

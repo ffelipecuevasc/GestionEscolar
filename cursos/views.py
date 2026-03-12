@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from cursos.models import Curso
 from cursos.forms import CursoForm
@@ -24,3 +24,35 @@ def agregar_curso(request):
         form = CursoForm()
     contexto = {'form': form}
     return render(request, 'cursos/agregar_curso.html', contexto)
+
+# ── CRUD faltante ───────────────────────────────────────────────
+
+@login_required
+def detalle_curso(request, codigo):
+    curso = get_object_or_404(Curso, codigo=codigo)
+    contexto = {'curso': curso}
+    return render(request, 'cursos/detalle_curso.html', contexto)
+
+@login_required
+def editar_curso(request, codigo):
+    curso = get_object_or_404(Curso, codigo=codigo)
+    if request.method == 'POST':
+        form = CursoForm(request.POST, instance=curso)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_cursos')
+    else:
+        form = CursoForm(instance=curso)
+
+    contexto = {'form': form, 'curso': curso}
+    return render(request, 'cursos/editar_curso.html', contexto)
+
+@login_required
+def eliminar_curso(request, codigo):
+    curso = get_object_or_404(Curso, codigo=codigo)
+    if request.method == 'POST':
+        curso.delete()
+        return redirect('lista_cursos')
+
+    contexto = {'curso': curso}
+    return render(request, 'cursos/eliminar_curso.html', contexto)
