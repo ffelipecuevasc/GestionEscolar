@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404 # Función para
 from django.contrib.auth.decorators import login_required
 from alumnos.models import Alumno
 from alumnos.forms import AlumnoForm
+from django.contrib import messages
 
 @login_required
 def inicio(request):
@@ -19,7 +20,11 @@ def agregar_alumno(request):
     if request.method == 'POST':
         form = AlumnoForm(request.POST)
         if form.is_valid():
-            form.save()
+            alumno = form.save()
+            messages.success(
+                request,
+                f'El alumno {alumno.nombre} {alumno.apellido} fue registrado con éxito.'
+            )
             return redirect('lista_alumnos')
     else:
         form = AlumnoForm()
@@ -40,7 +45,11 @@ def editar_alumno(request, rut):
         form = AlumnoForm(request.POST, instance=alumno)
         if form.is_valid():
             # Acá ejecuto el UPDATE en la BD
-            form.save()
+            alumno = form.save()
+            messages.success(
+                request,
+                f'El alumno {alumno.nombre} {alumno.apellido} fue actualizado con éxito.'
+            )
             return redirect('lista_alumnos')
     else:
         # Acá estoy programando lo que pasa cuando la persona pinchó en el ICONO LÁPIZ (GET)
@@ -53,6 +62,10 @@ def eliminar_alumno(request, rut):
     alumno = get_object_or_404(Alumno, rut=rut)
     if request.method == 'POST':
         alumno.delete()
+        messages.success(
+            request,
+            f'El alumno {alumno.nombre} {alumno.apellido} fue eliminado del sistema.'
+        )
         return redirect('lista_alumnos')
     contexto = {'alumno':alumno}
     return render(request, 'alumnos/eliminar_alumno.html', contexto)

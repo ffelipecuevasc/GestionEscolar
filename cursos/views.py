@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from cursos.models import Curso
 from cursos.forms import CursoForm
+from django.contrib import messages
 
 @login_required
 def inicio(request):
@@ -18,7 +19,14 @@ def agregar_curso(request):
     if request.method == 'POST':
         form = CursoForm(request.POST)
         if form.is_valid():
-            form.save()
+            curso = form.save()
+            # ── MESSAGE ──────────────────────────────────────────────────────
+            # Para cursos usamos el nombre del curso, no una persona.
+            messages.success(
+                request,
+                f'El curso "{curso.nombre}" fue creado correctamente.'
+            )
+            # ─────────────────────────────────────────────────────────────────
             return redirect('lista_cursos')
     else:
         form = CursoForm()
@@ -33,26 +41,40 @@ def detalle_curso(request, codigo):
     contexto = {'curso': curso}
     return render(request, 'cursos/detalle_curso.html', contexto)
 
+
 @login_required
 def editar_curso(request, codigo):
     curso = get_object_or_404(Curso, codigo=codigo)
     if request.method == 'POST':
         form = CursoForm(request.POST, instance=curso)
         if form.is_valid():
-            form.save()
+            curso = form.save()
+            # ── MESSAGE ──────────────────────────────────────────────────────
+            messages.success(
+                request,
+                f'El curso "{curso.nombre}" fue actualizado correctamente.'
+            )
+            # ─────────────────────────────────────────────────────────────────
             return redirect('lista_cursos')
     else:
         form = CursoForm(instance=curso)
-
     contexto = {'form': form, 'curso': curso}
     return render(request, 'cursos/editar_curso.html', contexto)
+
 
 @login_required
 def eliminar_curso(request, codigo):
     curso = get_object_or_404(Curso, codigo=codigo)
     if request.method == 'POST':
+        # ── MESSAGE ──────────────────────────────────────────────────────────
+        # Guardamos el nombre ANTES de .delete() — mismo patrón que alumnos/profesores.
+        nombre_curso = curso.nombre
         curso.delete()
+        messages.success(
+            request,
+            f'🗑El curso "{nombre_curso}" fue eliminado del sistema.'
+        )
+        # ─────────────────────────────────────────────────────────────────────
         return redirect('lista_cursos')
-
     contexto = {'curso': curso}
     return render(request, 'cursos/eliminar_curso.html', contexto)
