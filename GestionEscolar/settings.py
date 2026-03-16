@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-#$(rf3txl^fu8m+$qcna__2itn!50c^d03809*rgrpqc*h^#0=')
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['felipe_cuevas.alwaysdata.net', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['felipecuevas.alwaysdata.net', 'localhost', '127.0.0.1']
 
 # Application definition
 
