@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,13 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-#$(rf3txl^fu8m+$qcna__2itn!50c^d03809*rgrpqc*h^#0="
+# ─── Seguridad ────────────────────────────────────────────────────────────────
+# python-decouple lee desde .env en local y desde variables de entorno en producción.
+# No hay lógica condicional en el código: el entorno se controla 100% desde afuera.
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-#$(rf3txl^fu8m+$qcna__2itn!50c^d03809*rgrpqc*h^#0=')
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['felipe_cuevas.alwaysdata.net', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -78,10 +80,22 @@ WSGI_APPLICATION = "GestionEscolar.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+# ─── Base de datos ─────────────────────────────────────────────────────────────
+# En desarrollo: .env apunta al contenedor Docker (root/root/127.0.0.1)
+# En producción: AlwaysData inyecta las variables reales del servidor
+# No se necesita ningún if/else → python-decouple hace la detección automática.
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME':     config('DB_NAME',     default='gestionescolar_db'),
+        'USER':     config('DB_USER',     default='root'),
+        'PASSWORD': config('DB_PASSWORD', default='root'),
+        'HOST':     config('DB_HOST',     default='127.0.0.1'),
+        'PORT':     config('DB_PORT',     default='3306'),
+        'OPTIONS': {
+            'charset': 'utf8mb4',   # soporte completo de Unicode (emojis, etc.)
+        },
     }
 }
 
